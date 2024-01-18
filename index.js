@@ -5,6 +5,7 @@ dotenv.config();
 const database = require("./config/database");
 const routerAdmin = require("./routes/admin/index.router")
 const routerClient = require("./routes/client/index.route");
+const systemConfig = require("./config/system")
 
 
 // database
@@ -22,6 +23,8 @@ routerAdmin(app);
 // routes client
 routerClient(app);
 
+// app locals variable
+app.locals.prefixAdmin = systemConfig.prefixAdmin; // Để lấy biến có thể dùng ở mọi nơi, ví dụ như trong file pug
 
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`);
