@@ -1,31 +1,10 @@
 const Products = require("../../models/Product");
+const filterStatusHelper = require("../../helpers/filterStatus");
+const searchHelper = require("../../helpers/search");
 
 module.exports.products = async (req, res) => {
-    let filterStatus = [
-        {
-            name: "Tất cả",
-            status: "",
-            class: ""
-        },
-        {
-            name: "Hoạt động",
-            status: "active",
-            class: ""
-        },
-        {
-            name: "Dừng hoạt động",
-            status: "inactive",
-            class: ""
-        }
-    ]
+    const filterStatus = filterStatusHelper(req.query);
 
-    if (req.query.status) {
-        const index = filterStatus.findIndex(item => item.status === req.query.status);
-        filterStatus[index].class = "active";
-    } else {
-        const index = filterStatus.findIndex(item => item.status === "");
-        filterStatus[index].class = "active";
-    }
 
     let find = {
         delete: false,
@@ -35,13 +14,10 @@ module.exports.products = async (req, res) => {
         find.status = req.query.status;
     }
 
-    let keyword = "";
-    if (req.query.keyword) {
-        keyword = req.query.keyword;
+    const objectSearch = searchHelper(req.query);
 
-        const regex = new RegExp(keyword, "i");
-
-        find.title = regex;
+    if (objectSearch.keyword) {
+        find.title = objectSearch.regex;
     }
 
     const products = await Products.find(find)
@@ -50,6 +26,6 @@ module.exports.products = async (req, res) => {
         pageTitle: "Trang sản phẩm",
         products: products,
         filterStatus: filterStatus,
-        keyword: keyword,
+        keyword: objectSearch.keyword,
     })
 }
