@@ -1,14 +1,18 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const methodOverride = require("method-override");
-dotenv.config();
+const bodyParser = require("body-parser");
 const database = require("./config/database");
 const routerAdmin = require("./routes/admin/index.router")
 const routerClient = require("./routes/client/index.route");
 const systemConfig = require("./config/system")
 
+dotenv.config();
 const app = express();
+
+app.use(express.static("public")); // Cài đặt thư mục public chứa các file tĩnh sẽ được public 
 app.use(methodOverride("_method"));
+app.use(bodyParser.urlencoded({ extended: false}));
 
 // database
 database.connect();
@@ -17,7 +21,6 @@ database.connect();
 app.set("views", "./views");
 app.set("view engine", "pug");
 
-app.use(express.static("public")); // Cài đặt thư mục public chứa các file tĩnh sẽ được public 
 
 // routes admin
 routerAdmin(app);
