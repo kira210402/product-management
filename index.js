@@ -1,12 +1,14 @@
 const express = require("express");
-const app = express();
 const dotenv = require("dotenv");
+const methodOverride = require("method-override");
 dotenv.config();
 const database = require("./config/database");
 const routerAdmin = require("./routes/admin/index.router")
 const routerClient = require("./routes/client/index.route");
 const systemConfig = require("./config/system")
 
+const app = express();
+app.use(methodOverride("_method"));
 
 // database
 database.connect();

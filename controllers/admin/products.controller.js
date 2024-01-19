@@ -4,7 +4,8 @@ const searchHelper = require("../../helpers/search");
 const paginationHelper = require("../../helpers/pagination");
 const Product = require("../../models/Product");
 
-module.exports.products = async (req, res) => {
+// [GET] /admin/products
+module.exports.index = async (req, res) => {
     const filterStatus = filterStatusHelper(req.query);
 
 
@@ -27,13 +28,13 @@ module.exports.products = async (req, res) => {
 
     let objectPagination = paginationHelper(
         {
-        currentPage: 1,
-        limitItems: 4,
+            currentPage: 1,
+            limitItems: 4,
         },
-        req.query, 
+        req.query,
         countProducts
     );
-   
+
     // End Pagination
 
 
@@ -46,4 +47,14 @@ module.exports.products = async (req, res) => {
         keyword: objectSearch.keyword,
         pagination: objectPagination,
     })
+}
+
+// [PATCH] /admin/products/change-status/:status/:id , lấy param bằng req.params
+module.exports.changeStatus = async (req, res) => {
+    const status = req.params.status;
+    const id = req.params.id;
+
+    await Product.updateOne({ _id: id }, { status: status });
+
+    res.redirect("back");  // Chuyển về trang trước đó
 }

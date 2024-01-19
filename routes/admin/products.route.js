@@ -1,6 +1,8 @@
 const router = require("express").Router();
-const productsController = require("../../controllers/admin/products.controller")
+const controller = require("../../controllers/admin/products.controller")
 
-router.get("/", productsController.products);
+router.get("/", controller.index);
+
+router.patch("/change-status/:status/:id", controller.changeStatus);
 
 module.exports = router;
